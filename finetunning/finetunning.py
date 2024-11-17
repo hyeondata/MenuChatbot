@@ -33,7 +33,7 @@ class ProgressCallback(TrainerCallback):
 
 
 class QA_FineTuningPipeline:
-    def __init__(self, model_path, pdf_paths, output_dir="results", lora_output_dir=r"C:\applicatiobn\loraData"):
+    def __init__(self, model_path, pdf_paths, output_dir="results", lora_output_dir=r"C:\Users\codeKim\Desktop\gemma2\loraData"):
         load_dotenv()
         self.pdf_paths = pdf_paths
         self.model_path = model_path
@@ -116,6 +116,7 @@ class QA_FineTuningPipeline:
 
     def format_qa_dataset(self, json_file_path="qa_dataset.json"):
         """Load and format QA dataset for fine-tuning."""
+        print("fileload")
         with open(json_file_path, 'r', encoding='utf-8') as f:
             qa_data = json.load(f)
         
@@ -153,9 +154,9 @@ class QA_FineTuningPipeline:
         """Fine-tune the model with the formatted dataset."""
         training_params = TrainingArguments(
             output_dir=self.output_dir,
-            num_train_epochs=30,
-            per_device_train_batch_size=3,
-            gradient_accumulation_steps=2,
+            num_train_epochs=15,
+            per_device_train_batch_size=1,
+            gradient_accumulation_steps=1,
             optim="paged_adamw_32bit",
             save_steps=10000,
             logging_steps=5,
@@ -211,9 +212,9 @@ class QA_FineTuningPipeline:
         # Step 1: Extract and split text
         raw_text = self.extract_text_from_pdf()
         text_contexts = self.split_text_to_contexts(raw_text)
-        print(text_contexts[53])
+        print(text_contexts[55])
         # Step 2: Generate QA pairs
-        qa_pairs = self.generate_qa_pairs(text_contexts[53])  # Example with first context
+        qa_pairs = self.generate_qa_pairs(text_contexts[55])  # Example with first context
         questions, answers = self.parse_qa_response(qa_pairs)
 
         # Step 3: Save QA dataset
@@ -230,7 +231,7 @@ class QA_FineTuningPipeline:
 def pipline_get():
     pipeline = QA_FineTuningPipeline(
         model_path="meta-llama/Llama-3.2-1B-Instruct",
-        pdf_paths=[r"C:\applicatiobn\test.pdf"]
+        pdf_paths=[r"C:\Users\codeKim\Desktop\gemma2\test.pdf"]
     )
     return pipeline
 

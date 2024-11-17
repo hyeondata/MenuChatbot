@@ -50,7 +50,7 @@ IMPORTANT INSTRUCTIONS:
             "temperature": 0.3,
             "top_p": 0.9,
             "top_k": 50,
-            "max_length": 200,
+            "max_length": 140,
             "min_length": 5,
             "no_repeat_ngram_size": 10,
             "num_beams": 10,

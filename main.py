@@ -26,7 +26,7 @@ llm = ChatOpenAI(model="gpt-4o")
 def model_init(BASE_MODEL, ADAPTER_MODEL):
     st.cache_resource.clear()  # 캐시 초기화
     torch.cuda.empty_cache()  # GPU 캐시 해제
-    time.sleep(1)
+    time.sleep(2)
     inferencer = loraModel.KorQuADLoRAInference(BASE_MODEL, ADAPTER_MODEL)
     return inferencer
 
@@ -53,6 +53,7 @@ def simulate_finetuning(target_ratio=100, batch_size=4):
         st.warning("⚠️ 파인튜닝이 진행 중입니다. 완료될 때까지 기다려주세요.")
         st.cache_resource.clear()  # 캐시 초기화
         torch.cuda.empty_cache()  # GPU 캐시 해제
+        time.sleep(2)
         # 진행 상황을 표시할 지표들
         progress_bar = st.progress(0)
         status_text = st.empty()
@@ -282,8 +283,10 @@ def get_ai_response(retriever, retriever_context, user_msg, korquad_model=None):
             return llm.invoke(user_prompt)
 def handle_model_toggle():
     # 채팅 기록 초기화
+    st.session_state.inferencer = None
     st.chat_message("assistant").empty()
     st.session_state.messages = []
+
     
 def main():
     load_dotenv()
@@ -297,6 +300,8 @@ def main():
     korquad_model = init_gemma_model() if st.session_state.use_korquad else None
     if (st.session_state.use_korquad):
         st.session_state.current_model_name = "Gemma-2-9b-it"
+    elif st.session_state.inferencer:
+        st.session_state.current_model_name = "Llama-3.2-1B-Instruct"
     else :
         st.session_state.current_model_name = "OpenAI GPT-4o"
 
@@ -307,7 +312,7 @@ def main():
         
         st.subheader("모델 선택")
         
-        base_path = r"C:\applicatiobn\loraData"  # 실제 사용할 경로로 변경
+        base_path = r"C:\Users\codeKim\Desktop\gemma2\loraData"  # 실제 사용할 경로로 변경
         
         folders = get_subfolders(base_path)
         
@@ -333,6 +338,7 @@ def main():
             ADAPTER_MODEL = selected_path
 
             try:
+                st.session_state.messages =[]
                 st.session_state.inferencer = model_init(BASE_MODEL, ADAPTER_MODEL)
                 st.session_state.current_model_name = selected_folder
                 success_message = st.empty()
@@ -406,6 +412,7 @@ def main():
         
         if st.button("Process") and docs:
             with st.spinner("Processing documents..."):
+                st.session_state.messages = []
                 raw_text = get_pdf_text(docs)
                 text_chunks = get_chunks(raw_text)
                 text_contexts = get_context(raw_text)
@@ -432,9 +439,10 @@ def main():
 
 
         if st.session_state.inferencer:
-            with st.spinner("LoRA 모델 응답 생성 중..."):
-                answer = get_answer(st.session_state.inferencer, user_question)
-                st.write(answer)
+            with st.chat_message("assistant"):
+               with st.spinner("LoRA 모델 응답 생성 중..."):
+                    answer = get_answer(st.session_state.inferencer, user_question)
+                    st.write(answer)
         else:
         # AI 응답 생성
                     # 문서가 처리되었는지 확인
