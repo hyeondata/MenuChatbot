@@ -18,8 +18,8 @@ import finetunning.loraModel as loraModel
 import threading
 from langchain_huggingface import HuggingFacePipeline
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig, pipeline
+load_dotenv()
 llm = ChatOpenAI(model="gpt-4o")
-
 
 # loraModel에서 제공하는 함수들
 @st.cache_resource
@@ -312,7 +312,7 @@ def main():
         
         st.subheader("모델 선택")
         
-        base_path = r"C:\Users\codeKim\Desktop\gemma2\loraData"  # 실제 사용할 경로로 변경
+        base_path = r"./loraData"  # 실제 사용할 경로로 변경
         
         folders = get_subfolders(base_path)
         

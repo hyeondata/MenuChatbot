@@ -33,7 +33,7 @@ class ProgressCallback(TrainerCallback):
 
 
 class QA_FineTuningPipeline:
-    def __init__(self, model_path, pdf_paths, output_dir="results", lora_output_dir=r"C:\Users\codeKim\Desktop\gemma2\loraData"):
+    def __init__(self, model_path, pdf_paths, output_dir="results", lora_output_dir=r"./loraData"):
         load_dotenv()
         self.pdf_paths = pdf_paths
         self.model_path = model_path
@@ -231,7 +231,7 @@ class QA_FineTuningPipeline:
 def pipline_get():
     pipeline = QA_FineTuningPipeline(
         model_path="meta-llama/Llama-3.2-1B-Instruct",
-        pdf_paths=[r"C:\Users\codeKim\Desktop\gemma2\test.pdf"]
+        pdf_paths=[r"./test.pdf"]
     )
     return pipeline
 

@@ -82,7 +82,7 @@ IMPORTANT INSTRUCTIONS:
 # 단일 예제 테스트 함수
 def test_single_lora_example():
     BASE_MODEL = "meta-llama/Llama-3.2-1B-Instruct"
-    ADAPTER_MODEL = r"C:\applicatiobn\loraData\Llama-3.2-1B-Instruct"
+    ADAPTER_MODEL = r"./loraData/Llama-3.2-1B-Instruct"
     
     inferencer = KorQuADLoRAInference(BASE_MODEL, ADAPTER_MODEL)
     
